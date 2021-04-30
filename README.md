@@ -67,7 +67,7 @@ python -m ipykernel install --user --name drlnd --display-name "drlnd"
 
 7. Place the file in the DRLND GitHub repository, in the `p1_navigation/` folder, and unzip (or decompress) the file. 
 
-### Instructions
+## Instructions for training agents.
 
 Follow the example in `Navigation_train_agents.ipynb` to train agents any of the following implemented algorithms
 
@@ -77,5 +77,7 @@ Follow the example in `Navigation_train_agents.ipynb` to train agents any of the
 
 The agent's weights will be stored in /weights.
 The agent's learning store (scores) will be stored in /results.
+
+## Project results 
 
 Review `report.ipynb` for a summary of the results.
