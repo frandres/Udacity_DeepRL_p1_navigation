@@ -19,16 +19,17 @@ UPDATE_EVERY = 4        # how often to update the network
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-def annealing_generator(eps_start:float,
-                      eps_end:float,
-                      eps_decay:float):
-    decreasing = eps_start>eps_end
+
+def annealing_generator(start: float,
+                        end: float,
+                        factor: float):
+    decreasing = start > end
     
-    eps = eps_start
+    eps = start
     while True:
         yield eps
         f = max if decreasing else min
-        eps = f(eps_end, eps_decay*eps)
+        eps = f(end, factor*eps)
         
 class Agent():
     '''
@@ -52,13 +53,13 @@ class Agent():
         self.state_size = state_size
         self.action_size = action_size
         self.seed = random.seed(seed)
-        self.epsilon_gen = annealing_generator(eps_start=hyperparams['eps_start'],
-                                               eps_end=hyperparams['eps_end'],
-                                               eps_decay=hyperparams['eps_decay'])
-        
-        self.beta_gen =    annealing_generator(eps_start=0.0001,
-                                               eps_end=1,
-                                               eps_decay=1.0000833333333334)
+        self.epsilon_gen = annealing_generator(start=hyperparams['eps_start'],
+                                               end=hyperparams['eps_end'],
+                                               factor=hyperparams['eps_decay'])
+
+        self.beta_gen =    annealing_generator(start=hyperparams['beta_start'],
+                                               end=hyperparams['beta_end'],
+                                               factor=hyperparams['beta_factor'])
         # Q-Network
         self.qnetwork_local = QNetwork(state_size, 
                                        action_size, 
@@ -72,6 +73,7 @@ class Agent():
         self.optimizer = optim.Adam(self.qnetwork_local.parameters(), lr=LR)
 
         # Replay memory
+        
         self.memory = PrioritizedReplayBuffer(BUFFER_SIZE, 
                                               BATCH_SIZE, 
                                               seed,
@@ -179,8 +181,7 @@ class Agent():
         self.memory.update_batches(memory_indices, (output-labels))
         
         beta =self.beta
-        
-        #import pdb; pdb.set_trace()
+
         bias_correction = ((1/BATCH_SIZE)*(1/priorities))**beta
         
         if random.random()>0.999:
@@ -354,8 +355,8 @@ class PrioritizedReplayBuffer:
             priorities.append(priority)
             values.append(value)
 
-#         if random.random()>0.999:
-#             import pdb; pdb.set_trace()
+        if random.random()>0.999:
+            import pdb; pdb.set_trace()
                           
         try:
             states = torch.from_numpy(np.vstack([e.state for e in experiences if e is not None])).float().to(device)
