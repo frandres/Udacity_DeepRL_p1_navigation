@@ -5,7 +5,6 @@ from collections import namedtuple, deque
 from agent.dqn_model import QNetwork
 
 import torch
-import torch.nn.functional as F
 import torch.optim as optim
 from torch import nn
 
