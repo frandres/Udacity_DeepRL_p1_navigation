@@ -83,7 +83,7 @@ class Agent():
         # Initialize time step (for updating every UPDATE_EVERY steps)
         self.t_step = 0
         
-        self.criterion = nn.MSELoss()
+        self.criterion = nn.MSELoss(reduce = False)
     
     @timed()
     def step(self, 
@@ -182,12 +182,12 @@ class Agent():
         
         beta =self.beta
 
-        bias_correction = ((1/BATCH_SIZE)*(1/priorities))**beta
-        
-        if random.random()>0.999:
-            pass#print(memory_indices,priorities)
+        bias_correction = ((1/len(self.memory))*(1/priorities))**beta
+        bias_correction = bias_correction/torch.max(bias_correction)
+        # if random.random()>0.999:
+        #     print(memory_indices,priorities,bias_correction)
             
-        loss = self.criterion(output, labels)
+        loss = (self.criterion(output, labels)*bias_correction).mean()
         
         loss.backward()
         self.optimizer.step()
@@ -355,8 +355,8 @@ class PrioritizedReplayBuffer:
             priorities.append(priority)
             values.append(value)
 
-        if random.random()>0.999:
-            import pdb; pdb.set_trace()
+        # if random.random()>0.999:
+        #     import pdb; pdb.set_trace()
                           
         try:
             states = torch.from_numpy(np.vstack([e.state for e in experiences if e is not None])).float().to(device)
