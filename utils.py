@@ -8,7 +8,7 @@ def plot_result(filename):
 
     df = pd.DataFrame({'data':data['scores']})
     df['rolling_mean'] = df['data'].rolling(100).mean()
-    df.plot()
+    df.plot(title = data['hyperparams']['description'])
 import matplotlib.pyplot as plt  
 def plot_result_grid(filenames,
                      n_rows,
