@@ -216,6 +216,8 @@ class Agent():
 
 class SumTree(object):
     '''
+    SumTree for efficiently performing weighted sampling. 
+
     Adapted from https://pylessons.com/CartPole-PER/
     '''
 
