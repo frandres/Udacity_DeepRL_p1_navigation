@@ -4,7 +4,10 @@ import torch.nn.functional as F
 
 
 class QNetwork(nn.Module):
-    """Actor (Policy) Model."""
+    """Actor (Policy) Model.
+       Skeleton adapted from Udacity exercise sample code. 
+        
+    """
 
     def __init__(self,
                  state_size,

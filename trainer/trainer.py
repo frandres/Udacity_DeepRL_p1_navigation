@@ -6,6 +6,7 @@ import numpy as np
 
 
 class AgentTrainer():
+    ''' Skeleton adapted from Udacity exercise sample code.'''
     def __init__(self,
                  env: unityagents.environment.UnityEnvironment,
                  max_t: int = 1000,

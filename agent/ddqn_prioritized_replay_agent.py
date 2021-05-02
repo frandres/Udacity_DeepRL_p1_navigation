@@ -33,6 +33,9 @@ def annealing_generator(start: float,
 class Agent():
     '''
     DDQN Agent for solving the navegation system project.
+
+    Skeleton adapted from Udacity exercise sample code. 
+
     '''
     """Interacts with and learns from the environment."""
 
